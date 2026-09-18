@@ -1,3 +1,4 @@
+
 name: Build Android APK
 
 on:
@@ -17,6 +18,12 @@ jobs:
       with:
         python-version: '3.10'
 
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
     - name: Install System Dependencies
       run: |
         sudo apt-get update
@@ -29,7 +36,7 @@ jobs:
 
     - name: Build APK with Buildozer
       run: |
-        yes | buildozer -v android debug
+        buildozer -v android debug
 
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
