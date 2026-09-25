@@ -1,14 +1,40 @@
 
-- name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
+name: Build Android APK
 
-      - name: Install dependencies
+on:
+  push:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install System Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential libssl-dev libffi-dev python3-dev gzip tar zip unzip openjdk-17-jdk git ccache ffmpeg libsdl2-dev libsdl2-image-dev libsdl2-mixer-dev libsdl2-ttf-dev libportmidi-dev libswscale-dev libavformat-dev libavcodec-dev zlib1g-dev
+
+      - name: Install Buildozer & Cython
         run: |
           pip install --upgrade pip
           pip install "cython<0.30.0" buildozer
 
-      - name: Build with Buildozer
+      - name: Build APK with Buildozer
         run: |
           yes | buildozer -v android debug
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my-app-apk
+          path: bin/*.apk
