@@ -17,5 +17,5 @@ warn_on_root = 1
 api = 33
 minapi = 24
 ndk = 25b
-android.ndk = 25b
-android.archs = arm64-v8a
+archs = arm64-v8a
+accept_sdk_licenses = True
